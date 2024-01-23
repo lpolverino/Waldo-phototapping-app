@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import styles from "./header.module.css"
 import { Link } from 'react-router-dom';
 
-const Header = ({characters}) => {
+const Header = ({characters, clickCount}) => {
 
   const renderCharacters = () => {
     if(characters.length !== 0){
@@ -24,6 +24,7 @@ const Header = ({characters}) => {
       <div className={styles.title}>
         <Link to="/"> Find Waldo! </Link>
       </div>
+        {(clickCount !== 0 && clickCount !== undefined) && <p className={styles.intents}> cliked:{clickCount} </p>}
         <div className={styles.characters}>
            {
             renderCharacters()
@@ -35,6 +36,7 @@ const Header = ({characters}) => {
 
 Header.propTypes = {
     characters: PropTypes.array,
+    clickCount: PropTypes.number
 };
 
 Header.defaultProps = {

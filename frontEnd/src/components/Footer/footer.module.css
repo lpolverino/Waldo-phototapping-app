@@ -1,0 +1,8 @@
+@import "../../index.css";
+
+.fot{
+    background-color: var(--waldo-blue);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}

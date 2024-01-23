@@ -4,7 +4,7 @@
     background-color: var(--waldo-red);
     padding: 10px;
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: 1fr 1fr 2fr;
     min-height: 100px;
     max-width: 1920px;
 }
@@ -21,6 +21,7 @@
 }
 
 .characters {
+    grid-column: 3/4;
     justify-self: center;
     align-items: center;
 }
@@ -40,6 +41,12 @@
 .character_name{
     font-size: 2rem;
     align-self: center;
+}
+
+.intents{
+    font-size: 2rem;
+    align-self: center;
+    justify-self: center;
 }
 
 .character_img{

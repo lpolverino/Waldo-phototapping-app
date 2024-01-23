@@ -19,3 +19,8 @@ html,body, #root{
   height: 100vh;
 }
 
+.gameboard{
+  height: 100%;
+  width: 100%;
+}
+

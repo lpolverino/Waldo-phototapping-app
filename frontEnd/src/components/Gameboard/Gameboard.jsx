@@ -22,7 +22,7 @@ const Gameboard = ({level, mouse, setMouse}) => {
   return (
     <div>
       {mouse.pressed && <PopUpMenu characters={level.characters} clickCharacter={handleCharacterClick} position={mouse.position}></PopUpMenu>}
-      <img src={level.img} onClick={(e) => handlerClick(e)}/>
+      <img className={"gameboard"} src={level.img} onClick={(e) => handlerClick(e)}/>
     </div>
   )
 }

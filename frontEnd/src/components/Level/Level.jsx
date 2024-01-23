@@ -5,6 +5,8 @@ import ErrorPage from "../ErrorPage/ErrorPage";
 import Header from "../Header/Header"
 import Gameboard from "../Gameboard/Gameboard";
 import {useState } from "react";
+import Footer from "../Footer/Footer"
+import styles from "./level.module.css"
 
 const Level = () => {
 
@@ -21,11 +23,12 @@ const Level = () => {
   if (level === undefined) return <ErrorPage></ErrorPage>
 
   return (
-    <div>
-      <div onClick={(e) => {e.preventDefault();setMouse({intent:mouse.intents, pressed:false})}}>
-         <Header characters={level.characters}> </Header>
+    <div className={styles.level}>
+      <div onClick={(e) => {e.preventDefault();setMouse({...mouse, pressed:false})}}>
+         <Header characters={level.characters} clickCount={mouse.intents}> </Header>
       </div>
        <Gameboard level={level} mouse={mouse} setMouse={setMouse}> </Gameboard>
+       <Footer></Footer>
     </div>
   )
 }

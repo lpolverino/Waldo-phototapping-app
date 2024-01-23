@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import mockLevels from "../../mockData"
 
 import ErrorPage from "../ErrorPage/ErrorPage";
+import Header from "../Header/Header"
+import Gameboard from "../Gameboard/Gameboard";
 
 const Level = () => {
 
@@ -12,7 +14,10 @@ const Level = () => {
   if (level === undefined) return <ErrorPage></ErrorPage>
 
   return (
-    <div>{levelId}</div>
+    <div>
+       <Header characters={level.characters}> </Header>
+       <Gameboard level={level}> </Gameboard>
+    </div>
   )
 }
 

@@ -2,13 +2,24 @@
 const levels =  [
     {
         id:"asdasdasdasdad",
-        img:"someImage",
+        img:"/assetsDev/assets/level1/wallpaperflare.com_wallpaper.jpg",
         name:"Level 1",
         characters: [
             {
+                id:"1",
                 name:"waldo",
-                img:""
-            }
+                img:"/assetsDev/assets/waldo.png"
+            },
+            {
+                id:"2",
+                name:"Wizard",
+                img:"/assetsDev/assets/wizard.png"
+            },
+            {
+                id:"3",
+                name:"EvilWaldo",
+                img:"/assetsDev/assets/evilwaldo.png"
+            },
         ],
 
     },
@@ -18,9 +29,20 @@ const levels =  [
         name:"Level 2",
         characters: [
             {
-                name:"wizard",
+                id:"1",
+                name:"waldo",
                 img:""
-            }
+            },
+            {
+                id:"2",
+                name:"Wizard",
+                img:""
+            },
+            {
+                id:"3",
+                name:"EvilWaldo",
+                img:""
+            },
         ]
     },
     {
@@ -29,9 +51,20 @@ const levels =  [
         name:"Level 3",
         characters: [
             {
-                name:"evilWaldo",
+                id:"1",
+                name:"waldo",
                 img:""
-            }
+            },
+            {
+                id:"2",
+                name:"Wizard",
+                img:""
+            },
+            {
+                id:"3",
+                name:"EvilWaldo",
+                img:""
+            },
         ]
     }
 ]

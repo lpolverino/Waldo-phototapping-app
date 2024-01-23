@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import styles from "./header.module.css"
 
 const Header = ({characters}) => {
 
@@ -6,7 +7,11 @@ const Header = ({characters}) => {
     if(characters.length !== 0){
         return(
           <ul>
-            {characters.map( character => <li key={character.id}> {character.name} </li>)}
+            {characters.map( character =>
+               <li className={styles.character} key={character.id}>
+                  <img className={styles.character_img} src={character.img}/>
+                  <p className={styles.character_name}>{character.name}</p>
+                </li>)}
           </ul>
         )
     }
@@ -14,9 +19,9 @@ const Header = ({characters}) => {
   }
 
   return (
-    <div>
-        <h1>Find</h1>
-        <div>
+    <div className={styles.header}>
+        <h1 className={styles.title}>Find Waldo!</h1>
+        <div className={styles.characters}>
            {
             renderCharacters()
            }

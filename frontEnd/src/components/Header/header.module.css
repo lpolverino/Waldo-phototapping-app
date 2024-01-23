@@ -1,0 +1,42 @@
+@import "../../index.css";
+
+.header{
+    background-color: var(--waldo-red);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    min-height: 100px;
+}
+
+.title{
+    font-size: 3rem;
+    justify-self: start;
+    align-self: center;
+}
+
+.characters {
+    justify-self: center;
+    align-items: center;
+}
+
+.characters ul{
+    display: flex;
+    list-style: none;
+    gap:1em;
+}
+
+.character{
+    align-self: center;
+    display: flex;
+    gap: 1em;
+}
+
+.character_name{
+    font-size: 2rem;
+    align-self: center;
+}
+
+.character_img{
+    width: 80px;
+    height: 80px;
+}

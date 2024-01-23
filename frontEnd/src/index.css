@@ -1,0 +1,21 @@
+@font-face {
+  font-family: Wally;
+  src: url("./assets/Times_Sans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+  font-family: Wally, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --waldo-red: rgb(219, 33, 33);
+  --waldo-blue: rgb(48, 143, 252);
+  color: white;
+}
+
+html,body, #root{
+  height: 100vh;
+}
+

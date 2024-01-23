@@ -1,0 +1,36 @@
+@import "../../index.css";
+
+.popup{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: var(--waldo-blue);
+}
+
+.character{
+    opacity: 0.85;
+}
+.character button{
+    border: none;
+    background-color: inherit;
+    cursor:pointer;
+    display: flex;
+    width: 100%;
+    border: 1px solid black;
+}
+
+.character p{
+    font-size: 2em;
+    text-align: center;
+    align-self: center;
+    margin: auto;
+}
+
+.character:hover, .character:focus{
+    opacity: 1;
+}
+
+.character img{
+    width:  100px;
+    height: 100px;
+}

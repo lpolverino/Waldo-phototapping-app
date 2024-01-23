@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
+import styles from "./pop-up-menu.module.css"
 
 const PopUpMenu = ({characters, clickCharacter, position}) => {
   return (
-    <div style={{
+    <div className={styles.popup} style={{
         position: "absolute",
         left: `${position.x}px`,
         top: `${position.y}px`,
     }}>
         {characters.map(character => {
             return (
-                <div key={character.id}>
+                <div key={character.id} className={styles.character}>
                     <button onClick={(e) =>clickCharacter(e, character.id)}>
                         <img src={character.img} alt={`image of ${character.name}`} />
-                        {character.name}
+                        <p>{character.name}</p>
                     </button>
                 </div>
             )

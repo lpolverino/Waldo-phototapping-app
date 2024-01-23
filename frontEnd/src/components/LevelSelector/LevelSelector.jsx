@@ -1,7 +1,7 @@
 import { useState } from "react"
 import mockLevels from "../../mockData"
 import { Link } from "react-router-dom"
-
+import styles from "./level-selector.module.css"
 
 const LevelSelector = () => {
 
@@ -9,12 +9,15 @@ const LevelSelector = () => {
 
   return (
     <div>
-      <ul>
+      <ul className={styles.card_displayer}>
         {levels.map(level =>
             <li key={level.id}>
-              <Link to={"level/"+level.id}>
-                {level.name}
-              </Link>
+              <div className={styles.card}>
+                <Link to={"level/"+level.id}>
+                  <h3>{level.name}</h3>
+                  <img src={level.img}/>
+                </Link>
+              </div>
             </li>
           )
         }

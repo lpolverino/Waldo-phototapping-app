@@ -25,7 +25,7 @@ const levels =  [
     },
     {
         id:"asdasasddasdasdad",
-        img:"someImage",
+        img:"/assetsDev/assets/level1/wallpaperflare.com_wallpaper.jpg",
         name:"Level 2",
         characters: [
             {
@@ -47,7 +47,7 @@ const levels =  [
     },
     {
         id:"asdasdasdsdfasdad",
-        img:"someImage",
+        img:"/assetsDev/assets/level1/wallpaperflare.com_wallpaper.jpg",
         name:"Level 3",
         characters: [
             {

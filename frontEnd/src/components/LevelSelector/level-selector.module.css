@@ -1,0 +1,27 @@
+@import "../../index.css";
+
+.card_displayer{
+    margin: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    list-style: none;
+}
+
+.card{
+    background-color: var(--waldo-red);
+    display:flex;
+    padding: 8px;
+    border-radius: 15px;
+    border: white solid 2px;
+    gap:8px;
+    text-align: center;
+}
+
+.card img{
+    margin-top: 8px;
+    max-width: 468px;
+    max-height: 420px;
+    background-size: scale-down;
+
+}

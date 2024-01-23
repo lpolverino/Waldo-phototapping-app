@@ -8,7 +8,9 @@ function App() {
   return (
     <div className={styles.app}>
       <Header></Header>
-      <LevelSelector></LevelSelector>
+      <div className={styles.main}>
+        <LevelSelector></LevelSelector>
+      </div>
       <Footer></Footer>
     </div>
   )

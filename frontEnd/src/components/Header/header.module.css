@@ -6,6 +6,7 @@
     display: grid;
     grid-template-columns: repeat(2,1fr);
     min-height: 100px;
+    max-width: 1920px;
 }
 
 .title{
@@ -39,4 +40,5 @@
 .character_img{
     width: 80px;
     height: 80px;
+    border-radius: 15px;
 }

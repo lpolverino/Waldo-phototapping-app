@@ -13,6 +13,11 @@
     font-size: 3rem;
     justify-self: start;
     align-self: center;
+    text-decoration: none;
+}
+
+.title a {
+    text-decoration: none;
 }
 
 .characters {

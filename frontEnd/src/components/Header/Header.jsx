@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import styles from "./header.module.css"
+import { Link } from 'react-router-dom';
 
 const Header = ({characters}) => {
 
@@ -20,7 +21,9 @@ const Header = ({characters}) => {
 
   return (
     <div className={styles.header}>
-        <h1 className={styles.title}>Find Waldo!</h1>
+      <div className={styles.title}>
+        <Link to="/"> Find Waldo! </Link>
+      </div>
         <div className={styles.characters}>
            {
             renderCharacters()

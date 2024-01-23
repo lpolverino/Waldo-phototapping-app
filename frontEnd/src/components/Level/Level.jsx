@@ -4,8 +4,15 @@ import mockLevels from "../../mockData"
 import ErrorPage from "../ErrorPage/ErrorPage";
 import Header from "../Header/Header"
 import Gameboard from "../Gameboard/Gameboard";
+import {useState } from "react";
 
 const Level = () => {
+
+  const [mouse, setMouse] = useState({
+    pressed: false,
+    intents:0,
+    position:null
+  })
 
   const { levelId } = useParams();
 
@@ -15,8 +22,10 @@ const Level = () => {
 
   return (
     <div>
-       <Header characters={level.characters}> </Header>
-       <Gameboard level={level}> </Gameboard>
+      <div onClick={(e) => {e.preventDefault();setMouse({intent:mouse.intents, pressed:false})}}>
+         <Header characters={level.characters}> </Header>
+      </div>
+       <Gameboard level={level} mouse={mouse} setMouse={setMouse}> </Gameboard>
     </div>
   )
 }

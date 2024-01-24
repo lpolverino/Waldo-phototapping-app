@@ -9,8 +9,10 @@ console.log(
   // Get arguments passed on command line
   const userArgs = process.argv.slice(2);
 
+	const Highscore = require("./model/highscore");
 	const Level = require("./model/level")
   const levels = []
+  const highscores = []
 
   const mongoose = require("mongoose");
   mongoose.set("strictQuery", false);
@@ -23,8 +25,8 @@ console.log(
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
+	await createHighscore();
     await createLevel();
- 
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
   }
@@ -32,11 +34,12 @@ console.log(
   // We pass the index to the ...Create functions so that, for example,
   // genre[0] will always be the Fantasy genre, regardless of the order
   // in which the elements of promise.all's argument complete.
-  async function levelCreate() {
+  async function levelCreate(highscoreIndex) {
     const level = new Level({ 
 			name:"level1",
-    	img:"https://i.imgur.com/pUWzROV.jpg",
-    characters:[{
+    		img:"https://i.imgur.com/pUWzROV.jpg",
+			highscore:highscores[highscoreIndex],
+    		characters:[{
 				_id:"waldolevel1",
 				name:"Waldo",
 				img:"https://i.imgur.com/ltRSywa.png",
@@ -84,11 +87,31 @@ console.log(
     ]
 		});
     await level.save();
+	levels[0] = level
     console.log(`Added level: ${"level1"}`);
   }
   
+  async function highscoreCreate() {
+		const highscore = new Highscore({
+			highscores:[
+				{
+					name:"lpolverino",
+					score:4500
+				}
+			]
+		})
+		await highscore.save();
+		highscores[0] = highscore
+		console.log("Added highscore for level 1")
+	}
+
   async function createLevel() {
     console.log("Adding level");
-    await levelCreate()
+    await levelCreate(0)
+  }
+
+  async function createHighscore(){
+	console.log("Adding Hghscore")
+	await highscoreCreate()
   }
   

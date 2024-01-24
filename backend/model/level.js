@@ -19,7 +19,8 @@ const LevelSchema = new Schema({
                 y:{type:Number, min:0},
             }}
         }}
-    }}]
+    }}],
+    highscore:{type:Schema.Types.ObjectId, ref:"Highscore", default:[]}
 })
 
 module.exports = mongoose.model("Level", LevelSchema)

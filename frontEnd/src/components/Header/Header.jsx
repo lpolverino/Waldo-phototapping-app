@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 import styles from "./header.module.css"
 import { Link } from 'react-router-dom';
+import { Backend } from '../Level/Level';
+import { useContext } from 'react';
 
-const Header = ({characters, clickCount}) => {
+const Header = ({clickCount}) => {
+
+  const {characters} = useContext(Backend)
 
   const renderCharacters = () => {
     if(characters.length !== 0){
         return(
           <ul>
             {characters.map( character =>
-               <li className={styles.character} key={character.id}>
+               <li className={styles.character} key={character._id}>
                   <img className={styles.character_img} src={character.img}/>
                   <p className={styles.character_name}>{character.name}</p>
                 </li>)}
@@ -35,7 +39,6 @@ const Header = ({characters, clickCount}) => {
 }
 
 Header.propTypes = {
-    characters: PropTypes.array,
     clickCount: PropTypes.number
 };
 

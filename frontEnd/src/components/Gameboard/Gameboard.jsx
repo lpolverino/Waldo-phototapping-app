@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types';
 import PopUpMenu from '../PopUpMenu/PopUpMenu';
+import {Backend} from '../Level/Level';
+import { useContext } from 'react';
 
-const Gameboard = ({level, mouse, setMouse}) => {
+const Gameboard = ({levelData, levelImg, mouse, setMouse}) => {
+
+  const {characters} = useContext(Backend)
 
   const handleCharacterClick = (e, characterId) =>{
     e.preventDefault()
@@ -21,23 +25,19 @@ const Gameboard = ({level, mouse, setMouse}) => {
 
   return (
     <div>
-      {mouse.pressed && <PopUpMenu characters={level.characters} clickCharacter={handleCharacterClick} position={mouse.position}></PopUpMenu>}
-      <img className={"gameboard"} src={level.img} onClick={(e) => handlerClick(e)}/>
+      {mouse.pressed && <PopUpMenu characters={characters} clickCharacter={handleCharacterClick} position={mouse.position}></PopUpMenu>}
+      <img className={"gameboard"} src={levelImg} onClick={(e) => handlerClick(e)}/>
     </div>
   )
 }
 
 Gameboard.propTypes = {
-    level: PropTypes.shape(
+    levelData: PropTypes.shape(
         {
             name: PropTypes.string,
-            img:PropTypes.string.isRequired,
-            characters:PropTypes.arrayOf(PropTypes.shape({
-                name:PropTypes.string,
-                img:PropTypes.string.isRequired
-            }))
         }
     ),
+    levelImg:PropTypes.string.isRequired,
     mouse: PropTypes.shape({
       intents: PropTypes.number,
       pressed: PropTypes.bool,

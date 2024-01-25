@@ -10,6 +10,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/level', levelController.level_list )
 
+router.get('/level/:levelId', levelController.level_detail)
+
 router.post('/level/:levelId', levelController.process_target_position)
 
 router.get('/level/:levelId/highscores', levelController.get_highscores)

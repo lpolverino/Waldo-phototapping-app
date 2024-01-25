@@ -10,8 +10,8 @@ const PopUpMenu = ({characters, clickCharacter, position}) => {
     }}>
         {characters.map(character => {
             return (
-                <div key={character.id} className={styles.character}>
-                    <button onClick={(e) =>clickCharacter(e, character.id)}>
+                <div key={character._id} className={styles.character}>
+                    <button onClick={(e) =>clickCharacter(e, character._id)}>
                         <img src={character.img} alt={`image of ${character.name}`} />
                         <p>{character.name}</p>
                     </button>

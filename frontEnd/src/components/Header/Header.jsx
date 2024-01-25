@@ -4,7 +4,39 @@ import { Link } from 'react-router-dom';
 import { Backend } from '../Level/Level';
 import { useContext } from 'react';
 
-const Header = ({clickCount}) => {
+const MINUTE_IN_MS = 60000
+
+const Timer = ({minutes, seconds}) =>{
+  return (
+    <div className={styles.timer}>
+      <h2>Score:</h2>
+      <p>{minutes}:{ (seconds < 10 ? "0" : "") + seconds}</p>
+    </div>
+  )
+}
+
+Timer.propTypes = {
+  minutes:PropTypes.number,
+  seconds:PropTypes.number,
+}
+
+const ClickCounter = ({clickCount}) => {
+
+  return (
+    <div className={styles.intents}>
+      {(clickCount !== 0 && clickCount !== undefined) && <h2> cliked:{clickCount} </h2>}
+    </div>
+  )
+}
+
+ClickCounter.propTypes = {
+  clickCount: PropTypes.number
+}
+
+
+const Header = ({clickCount, time}) => {
+  const minutes = Math.floor(time/ MINUTE_IN_MS)
+  const seconds = Math.floor((time/1000) % 60)
 
   const {characters} = useContext(Backend)
 
@@ -28,7 +60,8 @@ const Header = ({clickCount}) => {
       <div className={styles.title}>
         <Link to="/"> Find Waldo! </Link>
       </div>
-        {(clickCount !== 0 && clickCount !== undefined) && <p className={styles.intents}> cliked:{clickCount} </p>}
+        <Timer minutes={minutes} seconds={seconds}> </Timer> 
+        <ClickCounter clickCount={clickCount}> </ClickCounter>
         <div className={styles.characters}>
            {
             renderCharacters()
@@ -39,11 +72,13 @@ const Header = ({clickCount}) => {
 }
 
 Header.propTypes = {
-    clickCount: PropTypes.number
+    clickCount: PropTypes.number,
+    time:PropTypes.number,
 };
 
 Header.defaultProps = {
     characters: [],
+    time: 0
   };
 
 export default Header

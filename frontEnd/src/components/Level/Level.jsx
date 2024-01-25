@@ -26,7 +26,14 @@ const Level = () => {
   const [levelData, setLevelData] = useState(null)
   const [levelImg, setLevelImg] = useState(null)
   const [characters, setCharacters] = useState(null)
+  const [startTime, setStartTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState(new Date())
+
   const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
+
+  const calculateTime = () =>{
+    return Math.abs(currentTime - startTime);
+  }
 
   useEffect(() =>{
 
@@ -36,7 +43,6 @@ const Level = () => {
       const imageObjectURL = URL.createObjectURL(imageBlob);
       return imageObjectURL
     }
-
     const getData = async () =>{
       const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
       console.log(levelBackendUrl);
@@ -75,6 +81,12 @@ const Level = () => {
     getData()
   },[levelId])
 
+  useEffect( () =>{
+    setInterval(() => {
+      setCurrentTime(new Date())
+    },1000)
+  })
+
   const setCharacterFounded = (characterId, newFoundedValue) =>{
     if(characters === null) return 
     const newCharacters = characters.map(character => {
@@ -89,7 +101,7 @@ const Level = () => {
       <Backend.Provider value ={{url:levelBackendUrl, characters:characters}}>  
           <div className={styles.level}>
             <div onClick={(e) => {e.preventDefault();setMouse({...mouse, pressed:false})}}>
-               <Header clickCount={mouse.intents}> </Header>
+               <Header clickCount={mouse.intents} time={calculateTime()}> </Header>
             </div>
              <Gameboard levelData ={levelData} levelImg={levelImg} mouse={mouse} setMouse={setMouse} setCharacterFounded={setCharacterFounded} > </Gameboard>
              <Footer></Footer>

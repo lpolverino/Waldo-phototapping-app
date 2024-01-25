@@ -4,7 +4,7 @@
     background-color: var(--waldo-red);
     padding: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr 2fr;
     min-height: 100px;
     max-width: 1920px;
 }
@@ -21,7 +21,7 @@
 }
 
 .characters {
-    grid-column: 3/4;
+    grid-column: 4/5;
     justify-self: center;
     align-items: center;
 }
@@ -47,6 +47,7 @@
     font-size: 2rem;
     align-self: center;
     justify-self: center;
+    grid-column: 3/4;
 }
 
 .character_img{
@@ -57,4 +58,15 @@
 
 .founded{
     opacity: 0.8;
+}
+
+.timer{
+    grid-column: 2/3;
+    text-align: center;
+    align-self: center;
+}
+
+.timer, .intents{
+    font-size: 1.5rem;
+    text-align: center;
 }

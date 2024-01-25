@@ -2,13 +2,15 @@ import PropTypes from 'prop-types';
 import styles from "./pop-up-menu.module.css"
 
 const PopUpMenu = ({characters, clickCharacter, position}) => {
-  return (
+    const charactersLeft = characters.filter(character => !character.founded)
+  
+    return (
     <div className={styles.popup} style={{
         position: "absolute",
         left: `${position.x}px`,
         top: `${position.y}px`,
     }}>
-        {characters.map(character => {
+        {charactersLeft.map(character => {
             return (
                 <div key={character.id} className={styles.character}>
                     <button onClick={(e) =>clickCharacter(e, character.id)}>
@@ -17,7 +19,7 @@ const PopUpMenu = ({characters, clickCharacter, position}) => {
                     </button>
                 </div>
             )
-        } )}
+        })}
     </div>
   )
 }

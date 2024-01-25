@@ -59,7 +59,7 @@ const Level = () => {
         const charactersWIthFetchedImages = await Promise.all(
           actualData.level.characters.map(async (character) => {
             const chararcterImgUrl = await fetchImage(character.img)
-            return {...character, img:chararcterImgUrl}
+            return {...character, img:chararcterImgUrl, founded:false}
           })
         )
         setCharacters(charactersWIthFetchedImages)
@@ -75,6 +75,15 @@ const Level = () => {
     getData()
   },[levelId])
 
+  const setCharacterFounded = (characterId, newFoundedValue) =>{
+    if(characters === null) return 
+    const newCharacters = characters.map(character => {
+      if(characterId === character.id) return {...character, founded:newFoundedValue}
+      return character
+    })
+    setCharacters(newCharacters)
+  }
+
   const createGame = () =>{
     return (
       <Backend.Provider value ={{url:levelBackendUrl, characters:characters}}>  
@@ -82,7 +91,7 @@ const Level = () => {
             <div onClick={(e) => {e.preventDefault();setMouse({...mouse, pressed:false})}}>
                <Header clickCount={mouse.intents}> </Header>
             </div>
-             <Gameboard levelData ={levelData} levelImg={levelImg} mouse={mouse} setMouse={setMouse}> </Gameboard>
+             <Gameboard levelData ={levelData} levelImg={levelImg} mouse={mouse} setMouse={setMouse} setCharacterFounded={setCharacterFounded} > </Gameboard>
              <Footer></Footer>
           </div>
       </Backend.Provider>

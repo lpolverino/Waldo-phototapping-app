@@ -5,12 +5,18 @@ import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from "./gameboard.module.css"
 
-const Gameboard = ({levelData, levelImg, mouse, setMouse}) => {
+const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded}) => {
 
   const [messege, setMessege] = useState(null)
 
   const {characters, url} = useContext(Backend)
   const {levelId} = useParams()
+
+  const getResponseText = (succed, characterId) =>{
+    if(!succed) return "try again!"
+    const characterFound = characters.find(character => character.id === characterId)
+    return `Ỳou found ${characterFound.name}`
+  }
 
   const sendPosition = async (characterId) =>{
     try{
@@ -44,7 +50,8 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse}) => {
         setMessege(null)
       },3000)
     }
-    setMessege(positionData.succed ? "you spoted": "try Again")
+    setMessege(getResponseText(positionData.succed, characterId) )
+    setCharacterFounded(characterId, positionData.succed)
   }
 
   const handlerClick = (e) =>{
@@ -84,6 +91,7 @@ Gameboard.propTypes = {
       })
     }),
     setMouse: PropTypes.func,
+    setCharacterFounded: PropTypes.func,
 }
 
 export default Gameboard

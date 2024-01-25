@@ -67,7 +67,7 @@ exports.process_target_position = [
     if (!errors.isEmpty()) {
       res.status(403).send({errors:errors.array()})
     } else {
-        res.send({message:`Clicked on (${req.body.positionX} ; ${req.body.positionY}) in the level ${levelId} searching for ${req.body.characterId}`})
+        res.send({message:`Clicked on (${req.body.positionX} ; ${req.body.positionY}) in the level ${levelId} searching for ${req.body.characterId}`, succed:false})
     }
 })]
 

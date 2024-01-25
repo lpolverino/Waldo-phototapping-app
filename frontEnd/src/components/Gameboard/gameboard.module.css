@@ -1,0 +1,37 @@
+@import "../../index.css";
+
+.messege{
+    position:absolute;
+    top:20%;
+    left: calc(50% - 160px);
+    z-index: 2;
+    color: white;
+    background-color: var(--waldo-red);
+    border: white solid 2px;
+    min-height: 100px;
+    min-width: 320px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    animation: fade-in-out 3s linear;
+}
+
+.messege p{
+    align-self: center;
+}
+
+@keyframes fade-in-out {
+    0%{
+        opacity: 0;
+    }
+    5%{
+        opacity: 1;
+    }
+    80%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+
+}

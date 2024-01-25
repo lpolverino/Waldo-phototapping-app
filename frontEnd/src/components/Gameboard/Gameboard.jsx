@@ -1,16 +1,50 @@
 import PropTypes from 'prop-types';
 import PopUpMenu from '../PopUpMenu/PopUpMenu';
 import {Backend} from '../Level/Level';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styles from "./gameboard.module.css"
 
 const Gameboard = ({levelData, levelImg, mouse, setMouse}) => {
 
-  const {characters} = useContext(Backend)
+  const [messege, setMessege] = useState(null)
 
-  const handleCharacterClick = (e, characterId) =>{
+  const {characters, url} = useContext(Backend)
+  const {levelId} = useParams()
+
+  const sendPosition = async (characterId) =>{
+    try{
+      const response = await fetch(url,{
+        method:"post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          positionX:mouse.position.x,
+          positionY:mouse.position.y,
+          characterId
+        })
+      })
+      return response.json()
+    }
+    catch(error){
+      console.log(error.message);
+    }
+  }
+
+  const handleCharacterClick = async (e, characterId) =>{
     e.preventDefault()
     console.log(`clicked on ${characterId}`);
     setMouse({pressed: false, intents: mouse.intents +1})
+    const positionData = await sendPosition(characterId)
+    console.log(positionData.succed)
+    if (messege=== null){
+      setTimeout(() =>{
+        setMessege(null)
+      },3000)
+    }
+    setMessege(positionData.succed ? "you spoted": "try Again")
   }
 
   const handlerClick = (e) =>{
@@ -25,6 +59,9 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse}) => {
 
   return (
     <div>
+      {messege!== null && <div className={styles.messege}>
+        <p>{messege}</p>
+      </div>}
       {mouse.pressed && <PopUpMenu characters={characters} clickCharacter={handleCharacterClick} position={mouse.position}></PopUpMenu>}
       <img className={"gameboard"} src={levelImg} onClick={(e) => handlerClick(e)}/>
     </div>

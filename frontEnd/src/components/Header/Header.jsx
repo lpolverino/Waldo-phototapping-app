@@ -13,7 +13,7 @@ const Header = ({clickCount}) => {
         return(
           <ul>
             {characters.map( character =>
-               <li className={styles.character} key={character._id}>
+               <li className={styles.character} key={character.id}>
                   <img className={styles.character_img} src={character.img}/>
                   <p className={styles.character_name}>{character.name}</p>
                 </li>)}

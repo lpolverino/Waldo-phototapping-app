@@ -6,6 +6,7 @@ import { createContext, useEffect, useState } from "react";
 import Footer from "../Footer/Footer"
 import styles from "./level.module.css"
 import enviroment from "../../enviroment";
+import EndGamePanel from "../EndGamePanel/EndGamePanel";
 
 export const Backend = createContext({
   url:"",
@@ -28,11 +29,14 @@ const Level = () => {
   const [characters, setCharacters] = useState(null)
   const [startTime, setStartTime] = useState(new Date())
   const [currentTime, setCurrentTime] = useState(new Date())
+  const [finished, setFinished] = useState(false)
+  const [score, setScore] = useState(null)
 
   const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
 
-  const calculateTime = () =>{
-    return Math.abs(currentTime - startTime);
+  const calculateDifTimeWithStart = (time) =>{
+    if (finished) return -1 
+    return Math.abs(time - startTime);
   }
 
   useEffect(() =>{
@@ -45,7 +49,6 @@ const Level = () => {
     }
     const getData = async () =>{
       const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
-      console.log(levelBackendUrl);
       try{
         const response = await fetch(levelBackendUrl)
         if (!response.ok) {
@@ -54,7 +57,6 @@ const Level = () => {
           );
         }
         const actualData = await response.json();
-        console.log(actualData);
         setLevelData({
           _id:actualData.level._id,
           name:actualData.level.name,
@@ -94,6 +96,9 @@ const Level = () => {
       return character
     })
     setCharacters(newCharacters)
+    const isFinished = newCharacters.every(character => character.founded)
+    setFinished(isFinished)
+    setScore(currentTime)
   }
 
   const createGame = () =>{
@@ -101,9 +106,10 @@ const Level = () => {
       <Backend.Provider value ={{url:levelBackendUrl, characters:characters}}>  
           <div className={styles.level}>
             <div onClick={(e) => {e.preventDefault();setMouse({...mouse, pressed:false})}}>
-               <Header clickCount={mouse.intents} time={calculateTime()}> </Header>
+               <Header clickCount={mouse.intents} time={calculateDifTimeWithStart(currentTime)}> </Header>
             </div>
              <Gameboard levelData ={levelData} levelImg={levelImg} mouse={mouse} setMouse={setMouse} setCharacterFounded={setCharacterFounded} > </Gameboard>
+             {finished && <EndGamePanel score={calculateDifTimeWithStart(score)}></EndGamePanel>}
              <Footer></Footer>
           </div>
       </Backend.Provider>

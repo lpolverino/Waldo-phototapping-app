@@ -60,7 +60,7 @@ const Header = ({clickCount, time}) => {
       <div className={styles.title}>
         <Link to="/"> Find Waldo! </Link>
       </div>
-        <Timer minutes={minutes} seconds={seconds}> </Timer> 
+        {time >=0 && <Timer minutes={minutes} seconds={seconds}> </Timer> }
         <ClickCounter clickCount={clickCount}> </ClickCounter>
         <div className={styles.characters}>
            {
@@ -78,7 +78,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
     characters: [],
-    time: 0
+    time: -1
   };
 
 export default Header

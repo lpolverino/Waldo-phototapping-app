@@ -7,7 +7,7 @@ import enviroment from "../../enviroment"
 function App() {
   return (
     <div className={styles.app}>
-      <Header></Header>
+      <Header time={-1}></Header>
       <div className={styles.main}>
         <LevelSelector url={enviroment.getBackEnd()}></LevelSelector>
       </div>

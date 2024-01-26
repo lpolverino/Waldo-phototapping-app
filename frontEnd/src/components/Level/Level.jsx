@@ -13,6 +13,8 @@ export const Backend = createContext({
   characters:[]
 })
 
+
+
 const Level = () => {
 
   const { levelId } = useParams();
@@ -90,6 +92,8 @@ const Level = () => {
       setCurrentTime(new Date())
     },1000)
   })
+
+  
 
   const setCharacterFounded = (characterId, newFoundedValue) =>{
     if(characters === null) return 

@@ -93,6 +93,7 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
 
   const handlerClick = (e) =>{
     e.preventDefault()
+    console.log(window.scrollY);
     const imgAactualHeight = e.target.height
     const imgAactualWidth = e.target.width
 
@@ -100,8 +101,12 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
    // console.log(`original img size (${levelDimensions.width};${levelDimensions.height})`);
     const mouseCordinatesInImg = {
       x:e.clientX - e.target.offsetLeft,
-      y:e.clientY - e.target.offsetTop
+      y:e.clientY - e.target.offsetTop + window.scrollY
     }
+
+    console.log(
+      `mouse clicked in ${mouseCordinatesInImg.x} ; ${mouseCordinatesInImg.y}`
+    );
 
     const newMousePosition = {
       x:getAcutalPosition(mouseCordinatesInImg.x,imgAactualWidth,levelDimensions.width ),

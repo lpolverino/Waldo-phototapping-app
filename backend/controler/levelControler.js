@@ -3,6 +3,10 @@ const Highscores = require("../model/highscore");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
+const assertValidPosition = (pos, start, end) => {
+
+    return (pos.x >= start.x && pos.x <= end.x) && (pos.y >= start.y && pos.y <= end.y) 
+}
 
 const filterCharacterPositions = (level) =>{
     const charactersWIthoutPositions = level.characters.map(character => {
@@ -17,7 +21,9 @@ const filterCharacterPositions = (level) =>{
         name:level.name,
         img:level.img,
         characters: charactersWIthoutPositions,
-        highscore: level.highscore
+        highscore: level.highscore,
+        imgHeight:level.imgHeight,
+        imgWidth:level.imgWidth,
     }
 } 
 
@@ -35,11 +41,13 @@ exports.level_detail = asyncHandler( async (req,res, next) =>{
 
     const level = await Level.findById(levelId).exec()
 
+    console.log(level);
     if(level === null){
         res.status(400).send({message:"The level requested was not found"})
         next()
     }
-    res.send({level:filterCharacterPositions(level)})
+    const levelFiltered =filterCharacterPositions(level)
+    res.send({level:levelFiltered})
 })
 
 exports.process_target_position = [
@@ -66,9 +74,31 @@ exports.process_target_position = [
 
     if (!errors.isEmpty()) {
       res.status(403).send({errors:errors.array()})
-    } else {
-        res.send({message:`Clicked on (${req.body.positionX} ; ${req.body.positionY}) in the level ${levelId} searching for ${req.body.characterId}`, succed:true})
+      next()
     }
+    const clickedPosition = {
+        x:req.body.positionX,
+        y:req.body.positionY,
+    }
+
+    const characterId = req.body.characterId
+    console.log(`Clicked on (${clickedPosition.x} ; ${clickedPosition.y}) in the level ${levelId} searching for ${characterId}`);
+
+    const levelCharacters = await Level.findById(levelId).select("characters").exec()
+
+    if(levelCharacters === null){
+        res.status(400).send({message:"The level requested was not found"})
+        next()
+    }
+
+    const character = levelCharacters.characters.find(character => character._id === characterId)
+
+    console.log(character);
+
+    const succed = assertValidPosition(clickedPosition, character.position.from, character.position.to)
+
+    res.send({message:`Clicked on (${req.body.positionX} ; ${req.body.positionY}) in the level ${levelId} searching for ${req.body.characterId}`, succed:succed})
+    
 })]
 
 exports.get_highscores = asyncHandler( async (req, res, next) => {

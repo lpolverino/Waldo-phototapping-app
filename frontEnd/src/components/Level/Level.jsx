@@ -31,6 +31,7 @@ const Level = () => {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [finished, setFinished] = useState(false)
   const [score, setScore] = useState(null)
+  const [levelDimensions, setLevelDimensions] = useState(null)
 
   const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
 
@@ -56,6 +57,7 @@ const Level = () => {
           );
         }
         const actualData = await response.json();
+        console.log(actualData.level);
         setLevelData({
           _id:actualData.level._id,
           name:actualData.level.name,
@@ -63,6 +65,7 @@ const Level = () => {
         })
         const levelIMageURl = await fetchImage(actualData.level.img)
         setLevelImg(levelIMageURl)
+        setLevelDimensions({width:actualData.level.imgWidth, height: actualData.level.imgHeight})
         const charactersWIthFetchedImages = await Promise.all(
           actualData.level.characters.map(async (character) => {
             const chararcterImgUrl = await fetchImage(character.img)
@@ -117,7 +120,8 @@ const Level = () => {
                 levelImg={levelImg}
                 mouse={mouse}
                 setMouse={setMouse}
-                setCharacterFounded={setCharacterFounded}>
+                setCharacterFounded={setCharacterFounded}
+                levelDimensions= {levelDimensions}>
               </Gameboard>
              {finished && <EndGamePanel score={calculateDifTimeWithStart(score)}></EndGamePanel>}
              <Footer></Footer>

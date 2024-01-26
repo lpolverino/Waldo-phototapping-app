@@ -1,16 +1,42 @@
 import PropTypes from 'prop-types';
 import PopUpMenu from '../PopUpMenu/PopUpMenu';
 import {Backend} from '../Level/Level';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import styles from "./gameboard.module.css"
 
-const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded}) => {
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
+const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, levelDimensions}) => {
 
   const [messege, setMessege] = useState(null)
 
   const {characters, url} = useContext(Backend)
   const {levelId} = useParams()
+
+  const { height, width } = useWindowDimensions();
 
   const getResponseText = (succed, characterId) =>{
     if(!succed) return "try again!"
@@ -59,14 +85,33 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded}) 
     setCharacterFounded(characterId, positionData.succed)
   }
 
+  const getAcutalPosition = (position, currentSize, originalSize) =>{
+    const currentPorcentage =  (originalSize)/currentSize
+    return Math.round(position * (currentPorcentage))
+
+  } 
+
   const handlerClick = (e) =>{
     e.preventDefault()
-    const newMousePosition = {
+    const imgAactualHeight = e.target.height
+    const imgAactualWidth = e.target.width
+
+   // console.log(`actual img size (${imgAactualWidth}; ${imgAactualHeight})`);
+   // console.log(`original img size (${levelDimensions.width};${levelDimensions.height})`);
+    const mouseCordinatesInImg = {
       x:e.clientX - e.target.offsetLeft,
       y:e.clientY - e.target.offsetTop
     }
+
+    const newMousePosition = {
+      x:getAcutalPosition(mouseCordinatesInImg.x,imgAactualWidth,levelDimensions.width ),
+      y:getAcutalPosition(mouseCordinatesInImg.y,imgAactualHeight,levelDimensions.height )
+    }
     setMouse({...mouse, pressed:true, position:newMousePosition})
-    console.log(newMousePosition);
+    //console.log(newMousePosition);
+    console.log(
+      `the real position is (${getAcutalPosition(mouseCordinatesInImg.x,imgAactualWidth,levelDimensions.width )}; ${getAcutalPosition(mouseCordinatesInImg.y,imgAactualHeight,levelDimensions.height )}) `
+      )
   }
 
   return (
@@ -97,6 +142,10 @@ Gameboard.propTypes = {
     }),
     setMouse: PropTypes.func,
     setCharacterFounded: PropTypes.func,
+    levelDimensions: PropTypes.shape({
+      width:PropTypes.number,
+      height:PropTypes.number,
+    })
 }
 
 export default Gameboard

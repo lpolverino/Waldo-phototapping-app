@@ -35,7 +35,6 @@ const Level = () => {
   const levelBackendUrl = enviroment.getBackEnd() + "level/" +levelId
 
   const calculateDifTimeWithStart = (time) =>{
-    if (finished) return -1 
     return Math.abs(time - startTime);
   }
 
@@ -106,9 +105,20 @@ const Level = () => {
       <Backend.Provider value ={{url:levelBackendUrl, characters:characters}}>  
           <div className={styles.level}>
             <div onClick={(e) => {e.preventDefault();setMouse({...mouse, pressed:false})}}>
-               <Header clickCount={mouse.intents} time={calculateDifTimeWithStart(currentTime)}> </Header>
+               <Header
+                  clickCount={mouse.intents}
+                  time={
+                    finished ? -1 : calculateDifTimeWithStart(currentTime)
+                    }>
+                </Header>
             </div>
-             <Gameboard levelData ={levelData} levelImg={levelImg} mouse={mouse} setMouse={setMouse} setCharacterFounded={setCharacterFounded} > </Gameboard>
+              <Gameboard
+                levelData ={levelData}
+                levelImg={levelImg}
+                mouse={mouse}
+                setMouse={setMouse}
+                setCharacterFounded={setCharacterFounded}>
+              </Gameboard>
              {finished && <EndGamePanel score={calculateDifTimeWithStart(score)}></EndGamePanel>}
              <Footer></Footer>
           </div>

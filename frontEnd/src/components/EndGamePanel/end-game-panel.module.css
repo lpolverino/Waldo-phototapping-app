@@ -2,14 +2,28 @@
 
 .displayer{
     position: fixed;
-    top: 20%;
+    top: 25%;
     left: 40%;
     background-color: var(--waldo-blue);
-    border: white solid 1px;
+    border: white solid 2px;
     text-align: center;
     z-index: 2;
+    min-width: 20%;
+    min-height:180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border-radius: 15px;
 }
 
-.displayer input{
+.displayer h2{
+    font-size: 3rem;
+}
+
+.displayer p{
+    font-size: 2rem;
+}
+
+.displayer input , .displayer button{
     color: black;
 }

@@ -32,6 +32,11 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded}) 
           characterId
         })
       })
+      if (!response.ok) {
+        throw new Error(
+          `This is an HTTP error: The status is ${response.status}`
+        );
+      }
       return response.json()
     }
     catch(error){

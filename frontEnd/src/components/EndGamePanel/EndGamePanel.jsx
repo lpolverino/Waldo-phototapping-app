@@ -8,7 +8,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const MINUTE_IN_MS = 60000
 
-const Form = ({handleSubmit, submiting, setName}) =>{
+const Form = ({handleSubmit, submiting, setName, name}) =>{
 
   return (<> 
     <form onSubmit={(e) => handleSubmit(e)}>
@@ -26,6 +26,7 @@ Form.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submiting: PropTypes.bool.isRequired,
   setName: PropTypes.func.isRequired,
+  name:PropTypes.string,
 }
 
 const SubmitedButtons = () =>{
@@ -97,7 +98,7 @@ const EndGamePanel = ({score}) => {
         <p>Score {minutes}:{(seconds<10?"0":"")+seconds}</p>
         {submited && error === null
           ?<SubmitedButtons></SubmitedButtons>
-          :<Form handleSubmit={handleSubmit} submiting={submiting} setName={setName}></Form>  
+          :<Form handleSubmit={handleSubmit} submiting={submiting} setName={setName} name={name}></Form>  
         }
     </div>
   )

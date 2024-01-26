@@ -93,8 +93,6 @@ const Level = () => {
     },1000)
   })
 
-  
-
   const setCharacterFounded = (characterId, newFoundedValue) =>{
     if(characters === null) return 
     const newCharacters = characters.map(character => {
@@ -120,7 +118,6 @@ const Level = () => {
                 </Header>
             </div>
               <Gameboard
-                levelData ={levelData}
                 levelImg={levelImg}
                 mouse={mouse}
                 setMouse={setMouse}

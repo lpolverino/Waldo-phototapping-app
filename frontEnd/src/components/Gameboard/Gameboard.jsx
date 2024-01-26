@@ -1,42 +1,20 @@
 import PropTypes from 'prop-types';
 import PopUpMenu from '../PopUpMenu/PopUpMenu';
 import {Backend} from '../Level/Level';
-import { useContext, useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import { useContext, useState} from 'react';
 import styles from "./gameboard.module.css"
 
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
-
-function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowDimensions;
-}
-
-const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, levelDimensions}) => {
+const Gameboard = ({ levelImg, mouse, setMouse, setCharacterFounded, levelDimensions}) => {
 
   const [messege, setMessege] = useState(null)
+  const [imgActualSize, setImgActualSize] = useState({
+    x:0,
+    y:0,
+  })
 
   const {characters, url} = useContext(Backend)
-  const {levelId} = useParams()
 
-  const { height, width } = useWindowDimensions();
 
   const getResponseText = (succed, characterId) =>{
     if(!succed) return "try again!"
@@ -45,6 +23,12 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
   }
 
   const sendPosition = async (characterId) =>{
+
+    const positionInImage = {
+      x:getAcutalPosition(mouse.position.x,imgActualSize.width,levelDimensions.width ),
+      y:getAcutalPosition(mouse.position.y,imgActualSize.height,levelDimensions.height )
+    }
+    console.log(positionInImage);
     try{
       const response = await fetch(url,{
         method:"post",
@@ -53,8 +37,8 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          positionX:mouse.position.x,
-          positionY:mouse.position.y,
+          positionX:positionInImage.x,
+          positionY:positionInImage.y,
           characterId
         })
       })
@@ -93,9 +77,12 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
 
   const handlerClick = (e) =>{
     e.preventDefault()
-    console.log(window.scrollY);
     const imgAactualHeight = e.target.height
     const imgAactualWidth = e.target.width
+    const currentImgSize = {
+      width:e.target.width,
+      height:e.target.height,
+    }
 
    // console.log(`actual img size (${imgAactualWidth}; ${imgAactualHeight})`);
    // console.log(`original img size (${levelDimensions.width};${levelDimensions.height})`);
@@ -103,16 +90,11 @@ const Gameboard = ({levelData, levelImg, mouse, setMouse, setCharacterFounded, l
       x:e.clientX - e.target.offsetLeft,
       y:e.clientY - e.target.offsetTop + window.scrollY
     }
-
+    setImgActualSize(currentImgSize)
     console.log(
       `mouse clicked in ${mouseCordinatesInImg.x} ; ${mouseCordinatesInImg.y}`
     );
-
-    const newMousePosition = {
-      x:getAcutalPosition(mouseCordinatesInImg.x,imgAactualWidth,levelDimensions.width ),
-      y:getAcutalPosition(mouseCordinatesInImg.y,imgAactualHeight,levelDimensions.height )
-    }
-    setMouse({...mouse, pressed:true, position:newMousePosition})
+    setMouse({...mouse, pressed:true, position:mouseCordinatesInImg})
     //console.log(newMousePosition);
     console.log(
       `the real position is (${getAcutalPosition(mouseCordinatesInImg.x,imgAactualWidth,levelDimensions.width )}; ${getAcutalPosition(mouseCordinatesInImg.y,imgAactualHeight,levelDimensions.height )}) `

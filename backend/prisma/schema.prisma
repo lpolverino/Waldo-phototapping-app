@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Level {
+  id         Int                 @id @default(autoincrement())
+  name       String
+  url        String
+  imgWidth   Int @default(1920)
+  imgHeigth  Int @default(1080)
+  charactes  CharacterForLevel[]
+  highscores Highscore[]
+}
+
+model CharacterForLevel {
+  id      Int    @id @default(autoincrement())
+  name    String
+  url     String
+  fromx   Int
+  fromy   Int
+  tox     Int
+  toy     Int
+  levelId Int
+  level   Level  @relation(fields: [levelId], references: [id])
+}
+
+model Highscore {
+  id      Int    @id @default(autoincrement())
+  name    String
+  score   Int
+  levelId Int
+  level   Level  @relation(fields: [levelId], references: [id])
+}

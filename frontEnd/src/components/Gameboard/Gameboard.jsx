@@ -28,7 +28,7 @@ const Gameboard = ({ levelImg, mouse, setMouse, setCharacterFounded, levelDimens
       x:getAcutalPosition(mouse.position.x,imgActualSize.width,levelDimensions.width ),
       y:getAcutalPosition(mouse.position.y,imgActualSize.height,levelDimensions.height )
     }
-    console.log(positionInImage);
+    console.log({positionInImage});
     try{
       const response = await fetch(url,{
         method:"post",
@@ -70,9 +70,14 @@ const Gameboard = ({ levelImg, mouse, setMouse, setCharacterFounded, levelDimens
   }
 
   const getAcutalPosition = (position, currentSize, originalSize) =>{
-    const currentPorcentage =  (originalSize)/currentSize
+    console.log({
+      position,
+      currentSize,
+      originalSize
+    });
+    
+    const currentPorcentage =  (originalSize) / currentSize
     return Math.round(position * (currentPorcentage))
-
   } 
 
   const handlerClick = (e) =>{
@@ -83,9 +88,6 @@ const Gameboard = ({ levelImg, mouse, setMouse, setCharacterFounded, levelDimens
       width:e.target.width,
       height:e.target.height,
     }
-
-   // console.log(`actual img size (${imgAactualWidth}; ${imgAactualHeight})`);
-   // console.log(`original img size (${levelDimensions.width};${levelDimensions.height})`);
     const mouseCordinatesInImg = {
       x:e.clientX - e.target.offsetLeft,
       y:e.clientY - e.target.offsetTop + window.scrollY

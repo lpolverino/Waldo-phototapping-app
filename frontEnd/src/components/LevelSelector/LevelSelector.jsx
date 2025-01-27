@@ -9,11 +9,11 @@ const createDisplayer =  (levels) => {
   return  (
   <ul className={styles.card_displayer}>
     {levels.map(level =>
-        <li key={level._id}>
+        <li key={level.id}>
           <div className={styles.card}>
-            <Link to={"level/"+level._id}>
+            <Link to={"level/"+level.id}>
               <h3>{level.name}</h3>
-              <img src={level.img}/>
+              <img src={level.url}/>
             </Link>
           </div>
         </li>

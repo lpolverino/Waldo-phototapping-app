@@ -92,7 +92,7 @@ const EndGamePanel = ({score}) => {
     }
   }
 
-  return (
+  return ( 
     <div className={styles.displayer}>
         <h2>YOU WON!</h2>
         <p>Score {minutes}:{(seconds<10?"0":"")+seconds}</p>

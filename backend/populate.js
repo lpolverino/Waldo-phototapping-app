@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 
 require("dotenv").config()
+const {PrismaClient} = require('@prisma/client')
+const prisma = new PrismaClient();
 
 console.log(
 	'this script add the level 1 for the waldo db'
@@ -8,110 +10,81 @@ console.log(
   
   // Get arguments passed on command line
   const userArgs = process.argv.slice(2);
-
-	const Highscore = require("./model/highscore");
-	const Level = require("./model/level")
   const levels = []
   const highscores = []
 
-  const mongoose = require("mongoose");
-  mongoose.set("strictQuery", false);
   
-  const mongoDB = process.env.MONGODB_URI;
-  
-  main().catch((err) => console.log(err));
+	main()
+		.then(async () => {
+			await prisma.$disconnect()
+		})
+		.catch(async (err) => {
+			console.log(err);
+			await prisma.$disconnect()
+			process.exit(1);
+		})
   
   async function main() {
     console.log("Debug: About to connect");
-    await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
-	await createHighscore();
     await createLevel();
     console.log("Debug: Closing mongoose");
-    mongoose.connection.close();
   }
   
-  // We pass the index to the ...Create functions so that, for example,
-  // genre[0] will always be the Fantasy genre, regardless of the order
-  // in which the elements of promise.all's argument complete.
   async function levelCreate(highscoreIndex) {
-    const level = new Level({ 
-			name:"level1",
-    		img:"https://i.imgur.com/pUWzROV.jpg",
-			highscore:highscores[highscoreIndex],
-    		characters:[{
-				_id:"waldolevel1",
+    
+		const level = await prisma.level.create({
+			data:{
+				name:"level1",
+				url: "https://i.imgur.com/pUWzROV.jpg",
+			}
+		})
+		const waldo = await prisma.characterForLevel.create({
+			data:{
 				name:"Waldo",
-				img:"https://i.imgur.com/ltRSywa.png",
-				position:{
-					from:{
-						x:1165,
-						y:415,
-					},
-					to:{
-						x:1215,
-						y:485,
-					}
-				}
-			},
-			{
-				_id:"wizardlevel1",
-				name:"Wizard",
-				img:"https://i.imgur.com/laAEZzP.png",
-				position:{
-					from:{
-						x:500,
-						y:380,
-					},
-					to:{
-						x:545,
-						y:445,
-					}
-				}
-			},
-			{
-				_id:"evilwaldolevel1",
-				name:"Evil Waldo",
-				img:"https://i.imgur.com/5m8SLMS.png",
-				position:{
-					from:{
-						x:195,
-						y:390,
-					},
-					to:{
-						x:220,
-						y:450,
-					}
-				}
-			},
-    ]
+				url:"https://i.imgur.com/ltRSywa.png",
+				fromx:1165,
+				fromy:415,
+				tox: 1215,
+				toy: 485,
+				levelId: level.id,
+			}
 		});
-    await level.save();
+		const wizard = await prisma.characterForLevel.create({
+			data:{
+				name:"Wizard",
+				url:"https://i.imgur.com/laAEZzP.png",
+				fromx:500,
+				fromy:380,
+				tox: 545,
+				toy: 445,
+				levelId: level.id,
+			}
+		});
+		const evilWaldo = await prisma.characterForLevel.create({
+			data:{
+				name:"evilWaldo",
+				url:"https://i.imgur.com/5m8SLMS.png",
+				fromx:195,
+				fromy:390,
+				tox: 220,
+				toy: 450,
+				levelId: level.id,
+			}
+		});
+		const highscore = await prisma.highscore.create({
+			data:{
+				name:"lpolverino",
+				score: 4500,
+				levelId: level.id,
+			}
+		})
 	levels[0] = level
     console.log(`Added level: ${"level1"}`);
-  }
-  
-  async function highscoreCreate() {
-		const highscore = new Highscore({
-			highscores:[
-				{
-					name:"lpolverino",
-					score:4500
-				}
-			]
-		})
-		await highscore.save();
-		highscores[0] = highscore
-		console.log("Added highscore for level 1")
-	}
+}
 
   async function createLevel() {
     console.log("Adding level");
-    await levelCreate(0)
-  }
-
-  async function createHighscore(){
-	console.log("Adding Hghscore")
-	await highscoreCreate()
+    await levelCreate()
   }
   

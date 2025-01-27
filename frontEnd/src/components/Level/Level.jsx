@@ -13,8 +13,6 @@ export const Backend = createContext({
   characters:[]
 })
 
-
-
 const Level = () => {
 
   const { levelId } = useParams();
@@ -61,16 +59,16 @@ const Level = () => {
         const actualData = await response.json();
         console.log(actualData.level);
         setLevelData({
-          _id:actualData.level._id,
+          id:actualData.level.id,
           name:actualData.level.name,
           highscore: actualData.level.highscore,
         })
-        const levelIMageURl = await fetchImage(actualData.level.img)
+        const levelIMageURl = await fetchImage(actualData.level.url)
         setLevelImg(levelIMageURl)
-        setLevelDimensions({width:actualData.level.imgWidth, height: actualData.level.imgHeight})
+        setLevelDimensions({width:actualData.level.imgWidth, height: actualData.level.imgHeigth})
         const charactersWIthFetchedImages = await Promise.all(
-          actualData.level.characters.map(async (character) => {
-            const chararcterImgUrl = await fetchImage(character.img)
+          actualData.level.charactes.map(async (character) => {
+            const chararcterImgUrl = await fetchImage(character.url)
             return {...character, img:chararcterImgUrl, founded:false}
           })
         )

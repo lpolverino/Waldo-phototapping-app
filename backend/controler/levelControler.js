@@ -2,9 +2,9 @@ const Level = require("../model/level");
 const Highscores = require("../model/highscore");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const { prisma } = require("../connection");
 
 const assertValidPosition = (pos, start, end) => {
-
     return (pos.x >= start.x && pos.x <= end.x) && (pos.y >= start.y && pos.y <= end.y) 
 }
 
@@ -27,27 +27,48 @@ const filterCharacterPositions = (level) =>{
     }
 } 
 
-
 exports.level_list = asyncHandler(async (req, res, next) => {
-    const alllevels = await Level.find({})
-        .select("name img")
-        .sort({name:1})
-        .exec()
-    res.send({levels:alllevels});
+   const alllevels = await prisma.level.findMany({})
+   res.send({levels: alllevels})
 });
 
 exports.level_detail = asyncHandler( async (req,res, next) =>{
-    const levelId = req.params.levelId
+    const levelId = parseInt(req.params.levelId)
+    if(isNaN(levelId)) return res.status(401).send({message:"Invalid ID"})
 
-    const level = await Level.findById(levelId).exec()
+    const level = await prisma.level.findFirst({
+        select:{
+            id:true,
+            name: true,
+            url: true,
+            imgHeigth:true,
+            imgWidth:true,
+            charactes:{
+                select:{
+                    id:true,
+                    name: true,
+                    url:true
+                }
+            },
+            highscores:{
+                select:{
+                    id: true,
+                    name: true,
+                    score: true,
+                }
+            }
+        },
+        where:{
+            id: levelId
+        },
+    })
 
     console.log(level);
     if(level === null){
         res.status(400).send({message:"The level requested was not found"})
         next()
     }
-    const levelFiltered =filterCharacterPositions(level)
-    res.send({level:levelFiltered})
+    res.send({level})
 })
 
 exports.process_target_position = [
@@ -69,52 +90,69 @@ exports.process_target_position = [
     .withMessage("empty character"),
 
     asyncHandler( async (req,res,next) =>{
-    const levelId = req.params.levelId
-    const errors = validationResult(req);
+        const levelId = parseInt(req.params.levelId)
+        if(isNaN(levelId)) return res.status(401).send({message:"Invalid ID"})
+        const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      res.status(403).send({errors:errors.array()})
-      next()
-    }
-    const clickedPosition = {
-        x:req.body.positionX,
-        y:req.body.positionY,
-    }
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            res.status(403).send({errors:errors.array()})
+            next()
+        }
 
-    const characterId = req.body.characterId
+        const clickedPosition = {
+            x:req.body.positionX,
+            y:req.body.positionY,
+        }
+
+    const characterId = parseInt(req.body.characterId)
+    if(isNaN(characterId)) return res.status(401).send({message:"Invalid character id"})
+
     console.log(`Clicked on (${clickedPosition.x} ; ${clickedPosition.y}) in the level ${levelId} searching for ${characterId}`);
 
-    const levelCharacters = await Level.findById(levelId).select("characters").exec()
+
+    const levelCharacters = await prisma.characterForLevel.findMany({
+        where:{
+            levelId: levelId
+        }
+    })
+
+    console.log(levelCharacters);
 
     if(levelCharacters === null){
         res.status(400).send({message:"The level requested was not found"})
         next()
     }
-
-    const character = levelCharacters.characters.find(character => character._id === characterId)
-
+    const character = levelCharacters.find(character => character.id === characterId)
     console.log(character);
 
-    const succed = assertValidPosition(clickedPosition, character.position.from, character.position.to)
-
+    const succed = assertValidPosition(clickedPosition,
+        {x: character.fromx, y:character.fromy},
+        {x: character.tox, y:character.toy}
+    )
     res.send({message:`Clicked on (${req.body.positionX} ; ${req.body.positionY}) in the level ${levelId} searching for ${req.body.characterId}`, succed:succed})
     
 })]
 
 exports.get_highscores = asyncHandler( async (req, res, next) => {
-    const level = await Level.findById(req.params.levelId).exec()
 
-    if(level === null) {
-        res.status(404).send({message:`resource ${req.params.levelId} not found`})
-        return
-    }
+    const levelId = parseInt(req.params.levelId)
+    if(isNaN(levelId)) return res.status(401).send({message:"Invalid ID"})
 
-    const highscores = await Highscores.findById(level.highscore).limit(50).exec()
+    const level = await prisma.level.findFirst({
+        where: {
+            id: levelId
+        }
+    })
 
-    if(highscores === null) {
-        res.send({highscores: []})
-        return
-    }
+    if (level === null) return res.status(404)
+    
+    const highscores = await prisma.highscore.findMany({
+        where:{
+            levelId: levelId
+        }
+    });
+    if(highscores === null) return res,send({highscores:[]})
 
     res.send({highscores})
 })
@@ -137,8 +175,30 @@ exports.add_score =[
             return
         }
 
-        const newScore = {name:req.body.name, score: req.body.score}
+        const newScore = {name:req.body.name, score: parseInt(req.body.score)}
 
+        if(isNaN(newScore.score)) return res.status(403).send({message:"cannot process the reqeust"})
+
+        const levelId = parseInt(req.params.levelId)
+        if(isNaN(levelId)) return res.status(401).send({message:"Invalid ID"})
+        
+        const level = await prisma.level.findFirst({
+            where: {
+                id: levelId,
+            },
+        })
+
+        if (level === null) return res.sendStatus(400).send({message: `resource ${levelId} not found`})
+        
+        const newHighscore = await prisma.highscore.create({
+            data:{
+                name:req.body.name,
+                score: req.body.score,
+                levelId: level.id
+            }
+        })
+        return res.send({highscoreId: newHighscore.id})
+            /*
         const levelHighscoreId = await Level.findById(req.params.levelId).select("highscore").exec()
 
         console.log(levelHighscoreId);
@@ -167,5 +227,6 @@ exports.add_score =[
             res.status(500).send({message:`Something went wrong: ${e}`})
             return
         }
+        */
     })
 ]

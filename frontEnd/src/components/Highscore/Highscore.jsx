@@ -64,8 +64,8 @@ const Highscore = () => {
           throw new Error(`This is an HTTP error: The status is ${response.status}`)
         }
       const responseData = await response.json()
-      setHighscores(responseData.highscores.highscores)
-      console.log(responseData.highscores.highscores);
+      setHighscores(responseData.highscores)
+      console.log(responseData.highscores);
       }
       catch(error){
         console.log(error.message);
